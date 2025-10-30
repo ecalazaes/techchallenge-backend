@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # -----------------------------------------------------------
+  # Serviço do Banco de Dados MySQL
+  # -----------------------------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: mysql-db-techchallenge
+    environment:
+      # Credenciais usadas no application.properties
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: techchallenge_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      # Configuração de charset para evitar problemas de acentuação
+      MYSQL_INITDB_ARGS: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      # Porta padrão do MySQL
+      - "3306:3306"
+    volumes:
+      # Garante que os dados do banco persistam mesmo após o container ser derrubado
+      - mysql_data:/var/lib/mysql
+    # Define uma rede interna para comunicação entre os containers
+    networks:
+      - techchallenge-net
+
+  # -----------------------------------------------------------
+  # Serviço da Aplicação Spring Boot (Backend Java)
+  # -----------------------------------------------------------
+  app:
+    # A imagem será construída a partir do Dockerfile na raiz do projeto
+    build: .
+    container_name: techchallenge-app
+    ports:
+      # Mapeia a porta 8080 do container para a porta 8080 do host
+      - "8080:8080"
+    environment:
+      # Configurações do Spring Boot para conectar ao MySQL (Host é 'db')
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/techchallenge_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    # Garante que o banco suba antes da aplicação
+    depends_on:
+      - db
+    # Tenta reiniciar se a aplicação falhar (útil para esperar o banco subir)
+    restart: always
+    networks:
+      - techchallenge-net
+
+# Definição de volumes e redes
+volumes:
+  mysql_data: # Volume para persistência dos dados do MySQL
+
+networks:
+  techchallenge-net:
+    driver: bridge
