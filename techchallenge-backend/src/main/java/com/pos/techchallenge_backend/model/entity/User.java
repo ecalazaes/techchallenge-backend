@@ -1,21 +1,25 @@
 package com.pos.techchallenge_backend.model.entity;
 
-import com.pos.techchallenge_backend.model.enums.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +37,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime lastUpdateDate;
 
     @Embedded
     private Address address;
-
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
 
 }
