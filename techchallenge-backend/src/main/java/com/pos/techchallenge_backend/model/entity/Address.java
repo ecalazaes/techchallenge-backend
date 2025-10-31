@@ -1,15 +1,13 @@
 package com.pos.techchallenge_backend.model.entity;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Embeddable // Indica que esta classe será embutida em uma entidade
 public class Address {
     private String street;
