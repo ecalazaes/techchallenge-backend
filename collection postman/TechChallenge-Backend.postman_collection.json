@@ -1,0 +1,392 @@
+{
+	"info": {
+		"_postman_id": "e0e00458-b2d9-46dc-8aa7-d594be565dcf",
+		"name": "TechChallenge-Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34306348"
+	},
+	"item": [
+		{
+			"name": "POST /v1/users - created owner (201)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Erick Calazães da Silva\",\r\n  \"email\": \"ecalazaes@gmail.com\",\r\n  \"login\": \"ecalazaes\",\r\n  \"password\": \"*CSmixz1991\",\r\n  \"userType\": \"RESTAURANT_OWNER\",\r\n  \"address\": {\r\n    \"street\": \"Rua Sidney\",\r\n    \"number\": \"366\",\r\n    \"city\": \"Rio de Janeiro\",\r\n    \"zipCode\": \"21.875-030\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /v1/users - created client(201)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Daniele Pinheiro\",\r\n  \"email\": \"dani@gmail.com\",\r\n  \"login\": \"danipinheiro\",\r\n  \"password\": \"*CSmixz62\",\r\n  \"userType\": \"CLIENT\",\r\n  \"address\": {\r\n    \"street\": \"Rua Sidney\",\r\n    \"number\": \"366\",\r\n    \"city\": \"Rio de Janeiro\",\r\n    \"zipCode\": \"21.875-030\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /v1/users - invalid (400)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Erick Calazães da Silva\",  \r\n  \"login\": \"ecalazaes\",\r\n  \"password\": \"*CSmixz1991\",\r\n  \"userType\": \"RESTAURANT_OWNER\",\r\n  \"address\": {\r\n    \"street\": \"Rua Sidney\",\r\n    \"number\": \"366\",\r\n    \"city\": \"Rio de Janeiro\",\r\n    \"zipCode\": \"21.875-030\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /v1/users - duplicate (409)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Erick Calazães da Silva\",\r\n  \"email\": \"ecalazaes@gmail.com\",\r\n  \"login\": \"ecalazaes\",\r\n  \"password\": \"*CSmixz1991\",\r\n  \"userType\": \"RESTAURANT_OWNER\",\r\n  \"address\": {\r\n    \"street\": \"Rua Sidney\",\r\n    \"number\": \"366\",\r\n    \"city\": \"Rio de Janeiro\",\r\n    \"zipCode\": \"21.875-030\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /v1/login - ok (200)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n  \"login\": \"ecalazaes\",\r\n  \"password\": \"*CSmixz1991\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /v1/login - invalid password (400)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n  \"login\": \"ecalazaes\",\r\n  \"password\": \"SenhaErrada\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /v1/login - invalid login (400)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n  \"login\": \"LoginErrado\",\r\n  \"password\": \"*CSmixz1991\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /v1/users?name= - ok (200)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Erick Calazães da Silva\",\r\n  \"email\": \"ecalazaes@gmail.com\",\r\n  \"login\": \"ecalazaes\",\r\n  \"password\": \"*CSmixz1991\",\r\n  \"userType\": \"RESTAURANT_OWNER\",\r\n  \"address\": {\r\n    \"street\": \"Rua Sidney\",\r\n    \"number\": \"366\",\r\n    \"city\": \"Rio de Janeiro\",\r\n    \"zipCode\": \"21.875-030\"\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users?name=e",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "e"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /v1/users{id}/password - ok (204)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"currentPassword\": \"*CSmixz1991\",  \r\n  \"newPassword\": \"*CSmixz1957\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/1/password",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"1",
+						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /v1/users{id}/password - invalid (400)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"currentPassword\": \"SenhaAtualIncorreta\",  \r\n  \"newPassword\": \"*CSmixz1957\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/1/password",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"1",
+						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /v1/users{id}/data - ok (200)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Erick Calazães da Silva\",\r\n  \"email\": \"joao.silva@teste.com\",\r\n  \"login\": \"ecalazaesNew\",  \r\n  \"userType\": \"RESTAURANT_OWNER\",\r\n  \"address\": {\r\n    \"street\": \"Rua Geovani De Castro\",\r\n    \"number\": \"90\",\r\n    \"city\": \"Rio de Janeiro\",\r\n    \"zipCode\": \"22.763-070\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/1/data",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"1",
+						"data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /v1/users{id}/data - invalid user not found (404)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Erick Calazães da Silva\",\r\n  \"email\": \"joao.silva@teste.com\",\r\n  \"login\": \"ecalazaesNew\",  \r\n  \"userType\": \"RESTAURANT_OWNER\",\r\n  \"address\": {\r\n    \"street\": \"Rua Geovani De Castro\",\r\n    \"number\": \"90\",\r\n    \"city\": \"Rio de Janeiro\",\r\n    \"zipCode\": \"22.763-070\"\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/45454578/data",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"45454578",
+						"data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /v1/users{id}/data - duplicate (409)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Erick Calazães da Silva\",\r\n  \"email\": \"joao.silva@teste.com\",\r\n  \"login\": \"ecalazaesNew\",  \r\n  \"userType\": \"RESTAURANT_OWNER\",\r\n  \"address\": {\r\n    \"street\": \"Rua Geovani De Castro\",\r\n    \"number\": \"90\",\r\n    \"city\": \"Rio de Janeiro\",\r\n    \"zipCode\": \"22.763-070\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/2/data",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"2",
+						"data"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api/v1"
+		}
+	]
+}
