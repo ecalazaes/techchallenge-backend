@@ -18,6 +18,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @Service
+ * Camada de Serviço responsável pela regra de negócio e gestão completa da entidade User.
+ * * Implementa os requisitos obrigatórios de CRUD, unicidade de e-mail e registro
+ * da data da última alteração. Segue o padrão SOLID de Responsabilidade Única.
+ *  @author Erick Calazães
+ */
 @Service
 @Transactional
 public class UserService {
@@ -32,8 +39,20 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ----------------------------------------------------------------------
+    // 1. REQUISITO: CADASTRO (Criação)
+    // ----------------------------------------------------------------------
+    /**
+     * Requisito: Cadastro de Usuário (Dono de restaurante ou Cliente)
+     * 1. Garante que o e-mail seja único.
+     * 2. Criptografa a senha antes de persistir.
+     * 3. Registra a data da última alteração.
+     * @param request DTO com os dados do usuário a ser registrado.
+     * @return UserResponse DTO do usuário criado.
+     * @throws EmailAlreadyExistsException Se o e-mail já estiver em uso.
+     */
     public UserResponse registerUser(UserRegistrationRequest request) {
-        // Validação obrigatória 1: Garantia de que o e-mail cadastrado seja único [cite: 22, 48]
+        // Garantia de que o e-mail cadastrado seja único
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException("E-mail já cadastrado: " + request.getEmail());
         }
@@ -41,15 +60,25 @@ public class UserService {
         // Mapeia DTO para Entidade (resolvendo o Single Table Inheritance e criptografando a senha)
         User newUser = userMapper.mapRegistrationRequestToUser(request);
 
-        // Requisito: Registro da data da última alteração [cite: 20, 38]
+        // Registro da data da última alteração
         newUser.setLastUpdateDate(LocalDateTime.now());
 
         User savedUser = userRepository.save(newUser);
         return userMapper.mapUserToUserResponse(savedUser);
     }
+
+    // ----------------------------------------------------------------------
+    // 2. REQUISITO: BUSCA PELO NOME
+    // ----------------------------------------------------------------------
+    /**
+     * Requisito: Busca de usuários pelo nome.
+     * Retorna uma lista de usuários cujo nome contenha o termo de busca (case-insensitive).
+     * @param name Termo de busca (parte do nome).
+     * @return List<UserResponse> Lista de usuários encontrados.
+     */
     @Transactional(readOnly = true)
     public List<UserResponse> findUsersByName(String name) {
-        // Requisito: Busca de usuários pelo nome [cite: 21, 47]
+        // Busca de usuários pelo nome
         List<User> users = userRepository.findByNameContainingIgnoreCase(name);
 
         return users.stream()
@@ -57,11 +86,25 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    // ----------------------------------------------------------------------
+    // 3. REQUISITO: ATUALIZAÇÃO DE DADOS (Endpoint Distinto)
+    // ----------------------------------------------------------------------
+    /**
+     * Requisito: Atualização de dados em endpoint distinto (PUT /{id}/data).
+     * 1. Atualiza nome, e-mail, login e endereço.
+     * 2. Garante que o novo e-mail (se alterado) não esteja em uso por outro usuário.
+     * 3. Atualiza a data da última alteração.
+     * @param id ID do usuário a ser atualizado.
+     * @param request DTO com os novos dados.
+     * @return UserResponse DTO do usuário atualizado.
+     * @throws ResourceNotFoundException Se o usuário não for encontrado.
+     * @throws EmailAlreadyExistsException Se o novo e-mail já estiver em uso.
+     */
     public UserResponse updateUserData(Long id, UserUpdateRequest request) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
-        // Validação: Verificar unicidade se o e-mail foi alterado [cite: 22, 48]
+        // Verificar unicidade se o e-mail foi alterado
         if (!existingUser.getEmail().equals(request.getEmail())) {
             if (userRepository.findByEmail(request.getEmail()).isPresent()) {
                 throw new EmailAlreadyExistsException("Novo e-mail já cadastrado por outro usuário.");
@@ -74,18 +117,31 @@ public class UserService {
         existingUser.setLogin(request.getLogin());
         existingUser.setAddress(userMapper.mapAddressRequestToAddress(request.getAddress()));
 
-        // Requisito: Registro da data da última alteração [cite: 20, 38]
+        // Registro da data da última alteração
         existingUser.setLastUpdateDate(LocalDateTime.now());
 
         User updatedUser = userRepository.save(existingUser);
         return userMapper.mapUserToUserResponse(updatedUser);
     }
 
+    // ----------------------------------------------------------------------
+    // 4. REQUISITO: TROCA DE SENHA (Endpoint Exclusivo)
+    // ----------------------------------------------------------------------
+    /**
+     * Requisito: Troca de senha do usuário em endpoint separado (PUT /{id}/password).
+     * 1. Valida a senha atual fornecida pelo usuário antes de aplicar a nova.
+     * 2. Criptografa a nova senha.
+     * 3. Registra a data da última alteração.
+     * @param id ID do usuário.
+     * @param request DTO contendo a senha atual e a nova senha.
+     * @throws ResourceNotFoundException Se o usuário não for encontrado.
+     * @throws InvalidPasswordException Se a senha atual estiver incorreta.
+     */
     public void updatePassword(Long id, PasswordUpdateRequest request) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
-        // Validação de Segurança: Verificar se a senha atual confere (uso do PasswordEncoder)
+        // Verificar se a senha atual confere (uso do PasswordEncoder)
         if (!passwordEncoder.matches(request.getCurrentPassword(), existingUser.getPassword())) {
             throw new InvalidPasswordException("Senha atual incorreta.");
         }
@@ -93,12 +149,20 @@ public class UserService {
         // Atualiza senha e data de alteração
         existingUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
-        // Requisito: Registro da data da última alteração [cite: 20, 38]
+        // Registro da data da última alteração
         existingUser.setLastUpdateDate(LocalDateTime.now());
 
         userRepository.save(existingUser);
     }
 
+    // ----------------------------------------------------------------------
+    // 5. REQUISITO: EXCLUSÃO (Delete)
+    // ----------------------------------------------------------------------
+    /**
+     * Requisito: Exclusão de usuário (Delete /users/{id}).
+     * @param id ID do usuário a ser excluído.
+     * @throws ResourceNotFoundException Se o usuário não for encontrado.
+     */
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new ResourceNotFoundException("Usuário não encontrado.");

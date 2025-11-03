@@ -24,7 +24,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 // Configura a autorização de requisições
                 .authorizeHttpRequests(auth -> auth
-                        // Permite acesso irrestrito aos seus endpoints REST (Cadastro, Login, etc.)
+                        // Permite acesso irrestrito aos endpoints REST (Cadastro, Login, etc.)
                         .requestMatchers("/api/v1/**").permitAll()
                         // Permite acesso irrestrito à documentação Swagger/OpenAPI
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()

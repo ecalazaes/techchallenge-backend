@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // URI base para o tipo de erro (pode ser um link para a documentação da API)
+    // URI base para o tipo de erro
     private static final URI BASE_URI = URI.create("/problem-details");
 
     /**
@@ -76,9 +76,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
-            // Tipo corrigido para HttpHeaders
             org.springframework.http.HttpHeaders headers,
-            // Tipo corrigido para HttpStatusCode
             HttpStatusCode status,
             WebRequest request) {
 

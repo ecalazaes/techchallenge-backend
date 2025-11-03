@@ -10,6 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * @Service
+ * Implementa o requisito obrigatório de Validação de Login.
+ * Este serviço é responsável por verificar se as credenciais (login e senha)
+ * fornecidas pelo usuário são válidas, utilizando o PasswordEncoder para
+ * segurança na comparação da senha.
+ * @author Erick Calazães
+ */
 @Service
 @Transactional(readOnly = true)
 public class LoginService {
@@ -22,24 +30,32 @@ public class LoginService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Requisito: Serviço que verifica se login e senha são válidos.
+     * 1. Busca o usuário pelo login.
+     * 2. Compara a senha em texto puro do Request com a senha criptografada do banco.
+     * @param request DTO contendo o login e a senha para validação.
+     * @return boolean True se o login for bem-sucedido.
+     * @throws InvalidLoginCredentialsException Se o login ou a senha forem inválidos.
+     */
     public boolean validateLogin(LoginRequest request) {
-        // 1. Buscar o usuário pelo login fornecido
+        // Buscar o usuário pelo login fornecido
         Optional<User> userOptional = userRepository.findByLogin(request.getLogin());
 
-        // 2. Verificar se o usuário existe
+        // Verificar se o usuário existe
         if (userOptional.isEmpty()) {
             throw new InvalidLoginCredentialsException("Login ou senha inválidos.");
         }
 
         User user = userOptional.get();
 
-        // 3. Verificar se a senha confere (usando o PasswordEncoder)
+        // Verificar se a senha confere (usando o PasswordEncoder)
         // matches(Senha_Texto_Puro, Senha_Criptografada_BD)
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new InvalidLoginCredentialsException("Login ou senha inválidos.");
         }
 
-        // Se chegou até aqui, o login é válido
+        // login é válido
         return true;
     }
 
